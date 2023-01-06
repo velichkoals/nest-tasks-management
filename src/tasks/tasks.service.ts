@@ -14,14 +14,16 @@ export class TasksService {
 		private readonly tasksRepository: Repository<Task>,
 	) {}
 
-	async getTasks(filters: GetTasksFilterDto): Promise<Task[]> {
+	async getTasks(filters: GetTasksFilterDto, user: User): Promise<Task[]> {
 		const { status, search } = filters
-		const query = await this.tasksRepository.createQueryBuilder('task')
+		const query = await this.tasksRepository
+			.createQueryBuilder('task')
+			.where({ user })
 
 		if (status) query.andWhere('task.status = :status', { status })
 		if (search)
 			query.andWhere(
-				'LOWER(task.title) LIKE LOWER(:search) OR LOWER(task.description) LIKE LOWER(:search)', // LOWER means to lowercase
+				'(LOWER(task.title) LIKE LOWER(:search) OR LOWER(task.description) LIKE LOWER(:search))', // LOWER means to lowercase
 				{ search: `%${search}%` },
 			)
 
@@ -30,9 +32,9 @@ export class TasksService {
 		return tasks
 	}
 
-	async getTaskById(id: string): Promise<Task> {
-		const task = await this.tasksRepository.findOne({ where: { id } })
-		console.log(task)
+	async getTaskById(id: string, user: User): Promise<Task> {
+		const task = await this.tasksRepository.findOne({ where: { id, user } })
+
 		if (!task) throw new HttpException('Task not found', 400)
 		return task
 	}
@@ -51,16 +53,20 @@ export class TasksService {
 		return task
 	}
 
-	async updateTaskStatus(id: string, status: TaskStatus): Promise<Task> {
-		const task = await this.tasksRepository.findOne({ where: { id } })
+	async updateTaskStatus(
+		id: string,
+		status: TaskStatus,
+		user: User,
+	): Promise<Task> {
+		const task = await this.getTaskById(id, user)
 		task.status = status
 
 		await this.tasksRepository.save(task)
 		return task
 	}
 
-	async deleteTask(id: string): Promise<void> {
-		const deletedTask = await this.tasksRepository.delete(id)
+	async deleteTask(id: string, user: User): Promise<void> {
+		const deletedTask = await this.tasksRepository.delete({ id, user })
 
 		if (!deletedTask.affected) throw new HttpException('Task not found', 400)
 	}
