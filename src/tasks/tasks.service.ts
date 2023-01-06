@@ -2,9 +2,9 @@ import { HttpException, Injectable } from '@nestjs/common'
 import { CreateTaskDto } from './dto/create-task.dto'
 import { Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Task } from './task.entity'
 import { TaskStatus } from './task.status.enum'
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto'
+import { Task } from '../entities/task.entity'
 
 @Injectable()
 export class TasksService {

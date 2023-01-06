@@ -13,8 +13,8 @@ import { TasksService } from './tasks.service'
 import { CreateTaskDto } from './dto/create-task.dto'
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto'
 import { UpdateTaskStatusDto } from './dto/update-task-status.dto'
-import { Task } from './task.entity'
 import { AuthGuard } from '@nestjs/passport'
+import { Task } from '../entities/task.entity'
 
 @Controller('tasks')
 @UseGuards(AuthGuard())

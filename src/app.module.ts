@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common'
 import { TasksModule } from './tasks/tasks.module'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { Task } from './tasks/task.entity'
-import { User } from './auth/user.entity'
 import { AuthModule } from './auth/auth.module'
+import { Task } from './entities/task.entity'
+import { User } from './entities/user.entity'
 
 @Module({
 	imports: [
