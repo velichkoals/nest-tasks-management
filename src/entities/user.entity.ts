@@ -1,6 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import { Task } from './task.entity'
-import { Exclude } from 'class-transformer'
 
 @Entity('user')
 export class User {
